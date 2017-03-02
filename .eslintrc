@@ -24,6 +24,8 @@
     "consistent-return": 0,
     "no-unused-vars": ["error", { "argsIgnorePattern": "^next" }],
     "strict": ["error", "safe"],
-    "newline-per-chained-call": ["error", { "ignoreChainWithDepth": 6 }]
+    "newline-per-chained-call": ["error", { "ignoreChainWithDepth": 6 }],
+    "func-names": ["error", "as-needed"],
+    "prefer-arrow-callback": ["warn", { "allowNamedFunctions": true }]
   }
 }
