@@ -37,3 +37,4 @@ node_modules
 
 #nyc output
 .nyc_output
+coverage.lcov

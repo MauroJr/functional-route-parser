@@ -10,11 +10,10 @@ node_js:
 before_script:
   - npm prune
 scrippt:
-  - npm run cover
-  - npm run check-coverage
+  - npm run test
   - npm run build
 after_success:
-  - npm run report-coverage
+  - npm run coverage
   - npm run semantic-release
 branches:
   only:
