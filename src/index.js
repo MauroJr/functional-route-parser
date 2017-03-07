@@ -5,6 +5,7 @@ const NAMED_SEGMENT = ':';
 const ASSIGNMENT = '=';
 const OR_SIGN = '|';
 const MATCH_ANY = '*';
+const REGEX_MATCH_ANY = /^\/?([a-zA-Z0-9-_/])\/?$/;
 const REGEX_SPACES = /\s/;
 const VALID_SEGMENT = /^[a-z0-9_-]+$/i;
 const ANY_VALID_SEGMENT = '[a-zA-Z0-9_-]+';
@@ -17,9 +18,9 @@ module.exports = RouteParser;
 function RouteParser(route = '') {
   const { regex, path } = compileRoute(route);
 
-  return Object.freeze({ parse });
+  return Object.freeze({ match });
 
-  function parse(route = '') {
+  function match(route = '') {
     const regexResult = regex.exec(route);
 
     if (regexResult === null) return false;
@@ -33,6 +34,10 @@ function RouteParser(route = '') {
 }
 
 function compileRoute(route) {
+  if (route === MATCH_ANY || route === DELIMETER) {
+    return REGEX_MATCH_ANY;
+  }
+
   try {
     const segments = route
       .replace(REGEX_SPACES, '')
@@ -51,7 +56,7 @@ function createRegex(segments) {
     regexGroups.push(`(${segment[1] || segment[0]})`);
     return segment[0];
   });
-  const regex = new RegExp(`^${regexGroups.join(DELIMETER)}$`);
+  const regex = new RegExp(`^/?${regexGroups.join(DELIMETER)}$`);
 
   return { path, regex };
 }
