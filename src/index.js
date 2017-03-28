@@ -28,7 +28,7 @@ function RouteParser(route = '') {
       }
 
       const result = namedSegments.reduce((_result, namedSegment) => {
-        _result[segments[namedSegment]] = regexResult[namedSegment];
+        _result[namedSegment[0]] = regexResult[namedSegment[1]];
 
         return _result;
       }, {});
@@ -65,14 +65,14 @@ function compileRoute(route) {
 
     return createRegex(segments);
   } catch (error) {
-    return error;
+    throw new TypeError(`Invalid Route: ${route}`);
   }
 }
 
 function createRegex(segments) {
   const regexGroups = [];
   const map = segments.reduce(mapSegments, { segments: [], namedSegments: [] });
-  const regex = new RegExp(`^/?${regexGroups.join(DELIMETER)}$`);
+  const regex = new RegExp(`^/?${regexGroups.join(DELIMETER)}/?$`);
 
   return { map, regex };
 
@@ -84,7 +84,8 @@ function createRegex(segments) {
       regexGroup = segmentRegex;
 
       // create a map of named segments
-      result.namedSegments.push = i;
+      // which maps to regex exec result, this is why we sum 1 to the index
+      result.namedSegments.push([segmentName, i + 1]);
     } else {
       regexGroup = segmentName;
     }
@@ -99,7 +100,7 @@ function createRegex(segments) {
 
 
 function parseSegment(segment, index, segments) {
-  if (segment === MATCH_ANY) {
+  if (segment === MATCH_ANY || segment === '') {
     return [index.toString(), segments.length === 1 ? STR_REGEX_MATCH_ANY : ANY_VALID_SEGMENT];
   }
 
